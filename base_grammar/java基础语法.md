@@ -27,6 +27,8 @@ int x = 1;
 
 不写初始值，就相当于给它指定了默认值。默认值总是`0`。
 
+> 注： Java变量的命名规范不同于C/C++，它可以使用`$`作为开头。但一般不用
+
 ## 基本数据类型
 
 - 整数类型：byte，short，int，long
@@ -35,7 +37,7 @@ int x = 1;
 - 布尔类型：boolean
 - 常量
 
-### 整形
+### 整型
 
 ---
 
@@ -46,11 +48,13 @@ int x = 1;
 - int: -2147483648 ~ 2147483647
 - long: -9223372036854775808 ~ 9223372036854775807
 
+> java可以使用`0b`或者`0B`开头表示二进制数字
+
 ### 浮点型
 
 ---
 
-- 对于`float`类型，需要加上`f`后缀。
+- 对于`float`类型，需要加上`f`后缀。不加f表示为double类型。
 - 浮点数可表示的范围非常大，`float`类型可最大表示3.4x1038，而`double`类型可最大表示1.79x10308。
 
 ### 布尔类型
@@ -67,13 +71,14 @@ int age = 12;
 boolean isAdult = age >= 18; // 计算结果为false
 ```
 
-Java语言对布尔类型的存储并没有做规定，因为理论上存储布尔类型只需要1 bit，但是通常JVM内部会把`boolean`表示为4字节整数。
+- Java语言对布尔类型的存储并没有做规定，因为理论上存储布尔类型只需要1 bit，但是通常JVM内部会把`boolean`表示为4字节整数。
+- 整数表达式不能转换成布尔类型，比如`x=0`不代表x为`false`
 
 ### 字符类型
 
 ---
 
-字符类型`char`表示一个字符。Java的`char`类型除了可表示标准的ASCII外，还可以表示一个Unicode字符：
+字符类型`char`表示一个字符。Java的`char`类型除了可表示标准的ASCII外，还可以表示一个Unicode字符（）：
 
 ```java
 public class Main {
@@ -85,6 +90,8 @@ public class Main {
     }
 }
 ```
+
+- 一般不使用char类型，除非需要处理`UTF-16`代码单元
 
 ### 常量
 
@@ -144,57 +151,34 @@ StringBuilder sb = new StringBuilder();
   - `\t` 表示Tab
   - `\u####` 表示一个Unicode编码的字符
 
-- 字符串连接（跨行）**jdk13新标准**
+- String类型的方法不会对String对象进行修改，只会返回修改后的String对象
 
-  - ```java
-    public class Main {
-          public static void main(String[] args) {
-              String s = """
-                         SELECT * FROM
-                           users
-                         WHERE id > 100
-                         ORDER BY name DESC
-                         """;
-              System.out.println(s);
-          }
-      }
-    ```
+- 空串为`null`（注意：这也是所有的引用类型的初始值）
 
-  - 上述多行字符串实际上是5行，在最后一个`DESC`后面还有一个`\n`。如果我们不想在字符串末尾加一个`\n`，就需要这么写：
+  - 判断是否为空串的方法
+    - `str.equal("");`
+    - `str.length==0;`
 
-    ```java
-    String s = """ 
-               SELECT * FROM
-                 users
-               WHERE id > 100
-               ORDER BY name DESC""";
-    ```
+- 构建字符串
 
-  - 还需要注意到，多行字符串前面共同的空格会被去掉，即：
+  ```java
+  StringBuilder str = new StringBuilder();
+  str.append("Hello");
+  str.append(" ").append("World!");
+  String res = str.toString();
+  ```
 
-    ```java
-    String s = """
-    ...........SELECT * FROM
-    ...........  users
-    ...........WHERE id > 100
-    ...........ORDER BY name DESC
-    ...........""";
-    ```
+- 将基本类型格式化进入`String`类型的字符串对象中(类似于C/C++中的`sprintf`函数)
 
-    用`.`标注的空格都会被去掉。
+  ```java
+  int x=3,y=4;
+  String str = String.format("%d:%d",x,y);
+  /**
+  str="3:4"
+  */
+  ```
 
-  - 如果多行字符串的排版不规则，那么，去掉的空格就会变成这样：
-
-    ```java
-    String s = """
-    .........  SELECT * FROM
-    .........    users
-    .........WHERE id > 100
-    .........  ORDER BY name DESC
-    .........  """;
-    ```
-
-    即总是以最短的行首空格为基准。
+  
 
 ### 数组类型
 
@@ -212,8 +196,7 @@ StringBuilder sb = new StringBuilder();
 ```java
 public class Main {
     public static void main(String[] args) {
-        // 5位同学的成绩:
-        int[] ns = new int[] { 68, 79, 91, 85, 62 };
+        int[] ns = new int[] { 68, 79, 91, 85, 62 }; //new int[]{} 为匿名数组
         System.out.println(ns.length); // 编译器自动推算数组大小为5
     }
 }
@@ -252,6 +235,42 @@ public class Main {
 }
 ```
 
+### 二维数组
+
+- 不同于C/C++的数组，Java中的二维数组实际就是一维数组
+
+- 一维数组可以单独使用，因此可以交换两行
+
+- 使用`for each`遍历二维数组的方法
+
+  ```java
+  
+  public class Main {
+      public static void main(String[] args) {
+          int[][] x = new int[][] {{1,2},{3,4,5},{6,7,8,9}};
+          for (int[] mem:x) {
+              for (int sin:mem) {
+                  System.out.print(sin);
+              }
+              System.out.println("");
+          }
+      }
+  
+  }
+  ```
+
+  
+
+## Java大数
+
+```java
+BigInteger x = BigInteger.valueOf(123456);
+x=x.add(BigInteger.valueOf(147));
+/*
+待续***
+*/
+```
+
 
 
 # 流程控制
@@ -267,6 +286,7 @@ public class Main {
 - `println`是print line的缩写，表示输出并换行。因此，如果输出后不想换行，可以用`print()`：
 - 格式化输出：`System.out.printf();`
   - 可以按`%s`格式化输出`String`类型
+  - 
 
 ### 输入
 
@@ -290,6 +310,45 @@ public class Main {
 
 - 先通过import语句导入`Java.util.Scanner`
 - `new`一个`Scanner`类型的对象，其参数为`System.in`为标准输入流
+
+### 文件的输入输出
+
+---
+
+- 使用shell方式（不使用IDE）
+
+  > 直接在编译时重定向输入输出文件
+  >
+  > e.g: 	java test.java < input,txt > output.txt
+
+- 使用`IDEA`开发环境
+
+  ```java
+  //记得要捕获异常--输入
+  Scanner in = new Scanner(Paths.get("input.txt"),"utf-8"); 
+  //此时input.txt文件必须放在项目的根目录，否则就要写绝对/相对路径
+  ```
+
+  ```java
+  import java.io.*;
+  import java.nio.charset.StandardCharsets;
+  
+  public class Main {
+      public static void main(String[] args) {
+          PrintWriter out;
+          try {
+              out = new PrintWriter("output.txt","utf-8");
+              out.println(456);
+              out.close();
+          } catch (IOException io) {
+              io.printStackTrace();
+          }
+      }
+  
+  }
+  ```
+
+
 
 ### 对象的判等
 
